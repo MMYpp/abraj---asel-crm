@@ -1,0 +1,9 @@
+XML
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <rect width="512" height="512" rx="100" fill="#14532d"/>
+  <rect x="25" y="25" width="462" height="462" rx="85" fill="none" stroke="#d4af37" stroke-width="12"/>
+  <path d="M110 300 L256 115 L402 300" fill="none" stroke="#d4af37" stroke-width="24" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M145 300 V390 H367 V300" fill="none" stroke="#ffffff" stroke-width="20"/>
+  <text x="256" y="355" font-size="72" text-anchor="middle" fill="#ffffff" font-weight="bold">AA</text>
+  <text x="256" y="440" font-size="32" text-anchor="middle" fill="#d4af37">CRM</text>
+</svg>
