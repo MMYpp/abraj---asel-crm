@@ -4,6 +4,8 @@ JSON
   "short_name": "ابراج الاصیل",
   "start_url": "./",
   "display": "standalone",
+  JSON
+"scope": "./",
   "background_color": "#ffffff",
   "theme_color": "#14532d",
   "orientation": "portrait",
