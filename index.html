@@ -4,240 +4,213 @@ HTML
 <html lang="fa" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#14532d">
 <title>ابراج الاصیل CRM V2</title>
+<link rel="manifest" href="./manifest.json">
 <style>
+:root{--g:#14532d;--bg:#f3f6f3;--line:#dce5dd}
 *{box-sizing:border-box}
-body{margin:0;background:#f1f3f5;color:#20252b;font-family:Tahoma,Arial}
-header{background:#142b26;color:white;padding:20px;text-align:center}
-header h2{margin:5px;color:#e8c66a}
-nav{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;padding:10px;background:#fff}
-button{border:0;border-radius:8px;padding:12px;background:#176b50;color:white;font-family:inherit;cursor:pointer}
-nav button{background:#263d36;font-size:12px}
-main{padding:12px;max-width:850px;margin:auto}
-section{display:none;background:white;padding:15px;border-radius:12px;margin-bottom:12px}
-section.active{display:block}
-h3{color:#176b50;margin-top:5px}
-input,select,textarea{width:100%;padding:12px;margin:6px 0 12px;border:1px solid #ccc;border-radius:7px;font-family:inherit}
-label{font-size:13px;font-weight:bold}
-.item{border:1px solid #ddd;border-right:4px solid #176b50;border-radius:8px;padding:12px;margin:10px 0;background:#fff}
-.item button{margin:4px;font-size:12px}
-.danger{background:#b72d32}
-.gold{background:#98721b}
-.small{font-size:12px;color:#666}
-.stat{background:#e8f2ed;padding:13px;border-radius:9px;margin:8px 0}
+body{margin:0;background:var(--bg);font-family:Tahoma,Arial;color:#17251b}
+header{background:var(--g);color:white;padding:18px}
+nav{display:flex;overflow:auto;gap:7px;padding:9px;background:white;position:sticky;top:0}
+button{border:0;border-radius:8px;padding:11px;cursor:pointer}
+nav button{background:#e9f0ea;color:#183c25;white-space:nowrap}
+nav button.active,.action{background:var(--g);color:white}
+main{padding:13px;max-width:850px;margin:auto}
+.panel{background:white;border:1px solid var(--line);border-radius:12px;padding:14px;margin-bottom:13px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(145px,1fr));gap:9px}
+.field{margin-bottom:9px}
+label{display:block;font-size:12px;margin-bottom:4px}
+input,select,textarea{width:100%;padding:11px;border:1px solid #cbd8ce;border-radius:8px;font:14px Tahoma}
+textarea{min-height:65px}
+.item{border:1px solid var(--line);border-radius:9px;padding:11px;margin-top:9px}
+.money{font-weight:bold;color:var(--g)}
+.hidden{display:none!important}
+.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:9px}
+.light{background:#e9f0ea;color:#183c25}
+.danger{background:#fff0f0;color:#a32626}
+.statgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:9px}
+.stat{background:#f0f6f1;padding:12px;border-radius:9px}
+.stat b{display:block;font-size:18px;margin-top:5px}
+.muted{font-size:12px;color:#65736a}
 </style>
 </head>
 <body>
 <header>
-<h2>دفتر رهنمای معاملات</h2>
-<h3 style="color:#e8c66a">ابراج الاصیل</h3>
-<div>سیستم مدیریت املاک و مشتریان V2</div>
+<h2>دفتر رهنمای معاملات ابراج الاصیل</h2>
+<p>مدیریت املاک، مشتریان و کمیسیون‌ها</p>
 </header>
 
 <nav>
-<button onclick="show('home')">خانه</button>
-<button onclick="show('properties')">املاک</button>
-<button onclick="show('customers')">مشتریان</button>
-<button onclick="show('accounts')">حساب‌ها</button>
-<button onclick="show('matches')">تطبیق هوشمند</button>
-<button onclick="show('reports')">گزارشات</button>
-<button onclick="show('backup')">پشتیبان‌گیری</button>
+<button class="active" data-tab="home">خانه</button>
+<button data-tab="properties">املاک</button>
+<button data-tab="customers">مشتریان</button>
+<button data-tab="commissions">کمیسیون‌ها</button>
+<button data-tab="backup">پشتیبان‌گیری</button>
 </nav>
 
 <main>
-<section id="home" class="active">
-<h3>داشبورد ابراج الاصیل</h3>
-<div class="stat">تعداد املاک: <b id="pcount">0</b></div>
-<div class="stat">تعداد مشتریان: <b id="ccount">0</b></div>
-<div class="stat">کمیسیون ثبت‌شده: <b id="income">0</b> افغانی</div>
-<div class="stat">بدهکاری ثبت‌شده: <b id="debt">0</b> افغانی</div>
-<p class="small">مدیریت دفتر معاملات املاک ابراج الاصیل</p>
+<section id="home" class="tab">
+<div class="panel">
+<h3>خلاصه دفتر</h3>
+<div class="statgrid">
+<div class="stat">املاک<b id="sProps">۰</b></div>
+<div class="stat">مشتریان<b id="sCust">۰</b></div>
+<div class="stat">کمیسیون<b id="sTotal">۰</b></div>
+</div>
+</div>
 </section>
 
-<section id="properties">
-<h3>ثبت ملک جدید</h3>
-<input id="pid" type="hidden">
-<label>نوع معامله</label>
-<select id="deal"><option>فروش</option><option>کرایی</option><option>بیع وفا</option></select>
-<label>نوع ملک</label>
-<select id="ptype">
-<option>خانه</option><option>زمین</option><option>آپارتمان</option>
-<option>دوکان</option><option>باغ</option><option>سایر</option>
-</select>
-<label>نام مالک</label><input id="owner" placeholder="نام مالک">
-<label>شماره تماس مالک</label><input id="pphone" placeholder="07XXXXXXXX" type="tel">
-<label>ولایت و ناحیه</label><input id="district" placeholder="هرات، ناحیه ۱۲">
-<label>موقعیت ملک</label><input id="location" placeholder="آدرس دقیق">
-<label>مساحت (متر مربع)</label><input id="area" type="number">
-<label>قیمت به افغانی</label><input id="price" type="number">
-<label>مشخصات ملک</label><textarea id="details"></textarea>
-<label>وضعیت</label>
-<select id="status"><option>موجود</option><option>فروخته شده</option><option>کرایه داده شده</option><option>رزرو</option></select>
-<label>مختصات یا لینک موقعیت</label><input id="coordinates" placeholder="لینک نقشه یا مختصات">
-<button onclick="saveProperty()">ذخیره ملک</button>
-<button class="gold" onclick="clearProperty()">پاک کردن فورم</button>
-<hr>
-<h3>فهرست املاک</h3>
-<input id="psearch" placeholder="جست‌وجو در املاک..." oninput="render()">
-<div id="plist"></div>
+<section id="properties" class="tab hidden">
+<div class="panel">
+<h3>ثبت ملک</h3>
+<form id="propForm">
+<div class="grid">
+<div class="field"><label>نوع معامله</label>
+<select id="pDeal"><option>فروش</option><option>کرایی</option><option>بیع وفا</option></select></div>
+<div class="field"><label>نوع ملک</label>
+<select id="pType"><option>خانه</option><option>زمین</option><option>دکان</option><option>آپارتمان</option><option>دفتر</option></select></div>
+<div class="field"><label>نام مالک</label><input id="pOwner" required></div>
+<div class="field"><label>شماره تماس</label><input id="pPhone" inputmode="tel"></div>
+<div class="field"><label>ناحیه</label><input id="pDistrict"></div>
+<div class="field"><label>موقعیت</label><input id="pLocation"></div>
+<div class="field"><label>قیمت افغانی</label><input id="pPrice" inputmode="decimal"></div>
+<div class="field"><label>مساحت مترمربع</label><input id="pArea" inputmode="decimal"></div>
+</div>
+<label>توضیحات</label><textarea id="pNotes"></textarea>
+<div class="actions"><button class="action">ذخیره ملک</button></div>
+</form>
+</div>
+<div class="panel"><h3>فهرست املاک</h3><div id="propList"></div></div>
 </section>
 
-<section id="customers">
-<h3>ثبت مشتری جدید</h3>
-<input id="cid" type="hidden">
-<label>نام مشتری</label><input id="cname">
-<label>شماره تماس</label><input id="cphone" placeholder="07XXXXXXXX">
-<label>نوع درخواست</label>
-<select id="need"><option>خرید</option><option>کرایی</option><option>بیع وفا</option></select>
-<label>نوع ملک مورد نیاز</label>
-<select id="ctype"><option>خانه</option><option>زمین</option><option>آپارتمان</option><option>دوکان</option><option>باغ</option><option>سایر</option></select>
-<label>بودجه مشتری به افغانی</label><input id="budget" type="number">
-<label>منطقه مورد نظر</label><input id="areaWanted">
-<label>توضیحات و نیاز مشتری</label><textarea id="cnotes"></textarea>
-<label>تاریخ تماس بعدی</label><input id="reminder" type="date">
-<button onclick="saveCustomer()">ذخیره مشتری</button>
-<button class="gold" onclick="clearCustomer()">پاک کردن فورم</button>
-<hr>
-<h3>فهرست مشتریان</h3>
-<input id="csearch" placeholder="جست‌وجوی مشتری..." oninput="render()">
-<div id="clist"></div>
+<section id="customers" class="tab hidden">
+<div class="panel">
+<h3>ثبت مشتری</h3>
+<form id="custForm">
+<div class="grid">
+<div class="field"><label>نام مشتری</label><input id="cName" required></div>
+<div class="field"><label>شماره تماس</label><input id="cPhone" inputmode="tel"></div>
+<div class="field"><label>نوع ملک</label><select id="cType"><option>خانه</option><option>زمین</option><option>دکان</option><option>آپارتمان</option><option>هر نوع</option></select></div>
+<div class="field"><label>نوع درخواست</label><select id="cDeal"><option>خرید</option><option>کرایه</option><option>بیع وفا</option><option>فروش</option></select></div>
+<div class="field"><label>حداقل بودجه</label><input id="cMin"></div>
+<div class="field"><label>حداکثر بودجه</label><input id="cMax"></div>
+<div class="field"><label>ناحیه</label><input id="cDistrict"></div>
+</div>
+<label>توضیحات</label><textarea id="cNotes"></textarea>
+<button class="action">ذخیره مشتری</button>
+</form>
+</div>
+<div class="panel"><h3>فهرست مشتریان</h3><div id="custList"></div></div>
 </section>
 
-<section id="accounts">
-<h3>ثبت کمیسیون و بدهکاری</h3>
-<label>نام شخص</label><input id="aname">
-<label>نوع حساب</label>
-<select id="atype"><option>کمیسیون دریافتی</option><option>کمیسیون طلب</option><option>بدهکاری</option><option>پرداخت بدهی</option></select>
-<label>مبلغ به افغانی</label><input id="amount" type="number">
-<label>توضیحات</label><textarea id="anote"></textarea>
-<button onclick="saveAccount()">ثبت حساب</button>
-<hr><div id="alist"></div>
+<section id="commissions" class="tab hidden">
+<div class="panel">
+<h3>ثبت کمیسیون</h3>
+<form id="comForm">
+<div class="grid">
+<div class="field"><label>نام طرف حساب</label><input id="mClient" required></div>
+<div class="field"><label>شرح معامله</label><input id="mDesc"></div>
+<div class="field"><label>کمیسیون توافق‌شده</label><input id="mTotal" required></div>
+<div class="field"><label>پرداخت‌شده</label><input id="mPaid" value="0"></div>
+</div>
+<button class="action">ذخیره کمیسیون</button>
+</form>
+</div>
+<div class="panel"><h3>فهرست کمیسیون‌ها</h3><div id="comList"></div></div>
 </section>
 
-<section id="matches">
-<h3>تطبیق هوشمند ملک و مشتری</h3>
-<p class="small">سیستم بر اساس نوع ملک، بودجه و موقعیت، گزینه‌های مناسب را پیدا می‌کند.</p>
-<button onclick="match()">شروع تطبیق</button>
-<div id="matchlist"></div>
-</section>
-
-<section id="reports">
-<h3>گزارش دفتر</h3>
-<div id="report"></div>
-<button onclick="window.print()">چاپ گزارش</button>
-</section>
-
-<section id="backup">
-<h3>پشتیبان‌گیری اطلاعات</h3>
-<p>برای نگهداری امن اطلاعات، هر چند روز یک‌بار نسخه پشتیبان بگیر.</p>
-<button onclick="backup()">دانلود نسخه پشتیبان</button>
-<label>بازیابی فایل پشتیبان JSON</label>
-<input type="file" id="restorefile" accept=".json">
-<button onclick="restore()">بازیابی اطلاعات</button>
-<button class="danger" onclick="clearAll()">حذف تمام اطلاعات این نسخه</button>
+<section id="backup" class="tab hidden">
+<div class="panel">
+<h3>پشتیبان‌گیری</h3>
+<button class="action" onclick="backup()">دانلود پشتیبان اطلاعات</button>
+<label style="margin-top:15px">بازیابی فایل پشتیبان</label>
+<input type="file" id="restoreFile" accept=".json">
+<button class="action" onclick="restore()">بازیابی اطلاعات</button>
+</div>
 </section>
 </main>
 
 <script>
-const get=k=>JSON.parse(localStorage.getItem('aseel_'+k)||'[]');
-const put=(k,v)=>localStorage.setItem('aseel_'+k,JSON.stringify(v));
-let properties=get('properties'),customers=get('customers'),accounts=get('accounts');
-
-function show(id){
- document.querySelectorAll('main section').forEach(s=>s.classList.remove('active'));
- document.getElementById(id).classList.add('active');
- render();
+const KEY='abraj_aseel_offline_v2';
+let db;
+try{
+db=JSON.parse(localStorage.getItem(KEY))||{properties:[],customers:[],commissions:[]};
+}catch(e){
+db={properties:[],customers:[],commissions:[]};
+}
+function save(){
+localStorage.setItem(KEY,JSON.stringify(db));
+render();
 }
 function val(id){return document.getElementById(id).value.trim()}
-function set(id,v){document.getElementById(id).value=v??''}
-function save(){
- put('properties',properties);put('customers',customers);put('accounts',accounts);render();
+function fmt(n){return Number(n||0).toLocaleString('fa-IR')}
+function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function makeId(){return Date.now().toString(36)+Math.random().toString(36).slice(2,7)}
+document.querySelectorAll('nav button').forEach(b=>{
+b.onclick=()=>{
+document.querySelectorAll('nav button').forEach(x=>x.classList.remove('active'));
+b.classList.add('active');
+document.querySelectorAll('.tab').forEach(x=>x.classList.add('hidden'));
+document.getElementById(b.dataset.tab).classList.remove('hidden');
+render();
+};
+});
+document.getElementById('propForm').onsubmit=e=>{
+e.preventDefault();
+db.properties.unshift({id:makeId(),deal:val('pDeal'),type:val('pType'),owner:val('pOwner'),phone:val('pPhone'),district:val('pDistrict'),location:val('pLocation'),price:Number(val('pPrice'))||0,area:Number(val('pArea'))||0,notes:val('pNotes')});
+e.target.reset();save();
+};
+document.getElementById('custForm').onsubmit=e=>{
+e.preventDefault();
+db.customers.unshift({id:makeId(),name:val('cName'),phone:val('cPhone'),type:val('cType'),deal:val('cDeal'),min:Number(val('cMin'))||0,max:Number(val('cMax'))||0,district:val('cDistrict'),notes:val('cNotes')});
+e.target.reset();save();
+};
+document.getElementById('comForm').onsubmit=e=>{
+e.preventDefault();
+let total=Number(val('mTotal'))||0,paid=Number(val('mPaid'))||0;
+if(paid>total){alert('پرداخت بیشتر از کمیسیون است');return}
+db.commissions.unshift({id:makeId(),client:val('mClient'),desc:val('mDesc'),total,paid});
+e.target.reset();save();
+};
+function del(type,id){
+if(confirm('حذف شود؟')){
+db[type]=db[type].filter(x=>x.id!==id);save();
 }
-function clearProperty(){
- ['pid','owner','pphone','district','location','area','price','details','coordinates'].forEach(x=>set(x,''));
-}
-function saveProperty(){
- if(!val('owner')||!val('price'))return alert('نام مالک و قیمت را وارد کنید');
- let p={id:val('pid')||Date.now().toString(),deal:val('deal'),type:val('ptype'),owner:val('owner'),phone:val('pphone'),district:val('district'),location:val('location'),area:Number(val('area')),price:Number(val('price')),details:val('details'),status:val('status'),coordinates:val('coordinates')};
- let i=properties.findIndex(x=>x.id===p.id);
- if(i>=0)properties[i]=p;else properties.unshift(p);
- save();clearProperty();alert('ملک ذخیره شد');
-}
-function editProperty(id){
- let p=properties.find(x=>x.id===id);if(!p)return;
- show('properties');
- Object.entries({pid:'id',deal:'deal',ptype:'type',owner:'owner',pphone:'phone',district:'district',location:'location',area:'area',price:'price',details:'details',status:'status',coordinates:'coordinates'}).forEach(([a,b])=>set(a,p[b]));
-}
-function clearCustomer(){
- ['cid','cname','cphone','budget','areaWanted','cnotes','reminder'].forEach(x=>set(x,''));
-}
-function saveCustomer(){
- if(!val('cname'))return alert('نام مشتری را وارد کنید');
- let c={id:val('cid')||Date.now().toString(),name:val('cname'),phone:val('cphone'),need:val('need'),type:val('ctype'),budget:Number(val('budget')),area:val('areaWanted'),notes:val('cnotes'),reminder:val('reminder')};
- let i=customers.findIndex(x=>x.id===c.id);
- if(i>=0)customers[i]=c;else customers.unshift(c);
- save();clearCustomer();alert('مشتری ذخیره شد');
-}
-function editCustomer(id){
- let c=customers.find(x=>x.id===id);if(!c)return;
- show('customers');
- Object.entries({cid:'id',cname:'name',cphone:'phone',need:'need',ctype:'type',budget:'budget',areaWanted:'area',cnotes:'notes',reminder:'reminder'}).forEach(([a,b])=>set(a,c[b]));
-}
-function removeItem(type,id){
- if(!confirm('آیا از حذف مطمئن هستید؟'))return;
- if(type==='p')properties=properties.filter(x=>x.id!==id);
- if(type==='c')customers=customers.filter(x=>x.id!==id);
- if(type==='a')accounts=accounts.filter(x=>x.id!==id);
- save();
-}
-function share(text){
- if(navigator.share)navigator.share({text}).catch(()=>{});
- else navigator.clipboard.writeText(text).then(()=>alert('متن کپی شد'));
 }
 function render(){
- document.getElementById('pcount').textContent=properties.length;
- document.getElementById('ccount').textContent=customers.length;
- document.getElementById('income').textContent=accounts.filter(x=>x.type==='کمیسیون دریافتی').reduce((s,x)=>s+x.amount,0).toLocaleString('en-US');
- document.getElementById('debt').textContent=accounts.filter(x=>x.type==='بدهکاری'||x.type==='کمیسیون طلب').reduce((s,x)=>s+x.amount,0).toLocaleString('en-US');
- document.getElementById('plist').innerHTML=properties.filter(p=>(JSON.stringify(p)).includes(val('psearch'))).map(p=>`<div class="item"><b>${p.type} - ${p.deal}</b><p>مالک: ${p.owner}</p><p>تماس: ${p.phone}</p><p>موقعیت: ${p.district} ${p.location}</p><p>مساحت: ${p.area} متر | قیمت: ${p.price.toLocaleString('en-US')} افغانی</p><p>وضعیت: ${p.status}</p><button onclick="editProperty('${p.id}')">ویرایش</button><button class="gold" onclick="share('ملک ${p.type}\\nمالک: ${p.owner}\\nتماس: ${p.phone}\\nموقعیت: ${p.location}\\nقیمت: ${p.price} افغانی\\nمساحت: ${p.area} متر')">اشتراک</button><button class="danger" onclick="removeItem('p','${p.id}')">حذف</button></div>`).join('');
- document.getElementById('clist').innerHTML=customers.filter(c=>JSON.stringify(c).includes(val('csearch'))).map(c=>`<div class="item"><b>${c.name}</b><p>تماس: ${c.phone}</p><p>درخواست: ${c.need} ${c.type}</p><p>بودجه: ${c.budget.toLocaleString('en-US')} افغانی</p><p>منطقه: ${c.area}</p><p>تماس بعدی: ${c.reminder||'ثبت نشده'}</p><button onclick="editCustomer('${c.id}')">ویرایش</button><button class="gold" onclick="share('مشتری: ${c.name}\\nتماس: ${c.phone}\\nدرخواست: ${c.need} ${c.type}\\nبودجه: ${c.budget}')">اشتراک</button><button class="danger" onclick="removeItem('c','${c.id}')">حذف</button></div>`).join('');
- document.getElementById('alist').innerHTML=accounts.map(a=>`<div class="item"><b>${a.type}</b><p>${a.name} | ${a.amount.toLocaleString('en-US')} افغانی</p><p>${a.note}</p><button class="danger" onclick="removeItem('a','${a.id}')">حذف</button></div>`).join('');
- document.getElementById('report').innerHTML=`<p>مجموع املاک: ${properties.length}</p><p>املاک موجود: ${properties.filter(p=>p.status==='موجود').length}</p><p>مجموع مشتریان: ${customers.length}</p><p>کمیسیون دریافتی: ${accounts.filter(a=>a.type==='کمیسیون دریافتی').reduce((s,a)=>s+a.amount,0).toLocaleString('en-US')} افغانی</p>`;
-}
-function saveAccount(){
- if(!val('aname')||!val('amount'))return alert('نام و مبلغ را وارد کنید');
- accounts.unshift({id:Date.now().toString(),name:val('aname'),type:val('atype'),amount:Number(val('amount')),note:val('anote')});
- save();set('aname','');set('amount','');set('anote','');alert('حساب ثبت شد');
-}
-function match(){
- let out=[];
- customers.forEach(c=>{
- properties.filter(p=>p.status==='موجود'&&p.type===c.type&&p.deal===c.need&&(!c.budget||p.price<=c.budget)&&(!c.area||p.location.includes(c.area)||p.district.includes(c.area))).forEach(p=>out.push({c,p}));
- });
- document.getElementById('matchlist').innerHTML=out.length?out.map(x=>`<div class="item"><b>مشتری: ${x.c.name}</b><p>ملک مناسب: ${x.p.type}</p><p>قیمت: ${x.p.price.toLocaleString('en-US')} افغانی</p><p>موقعیت: ${x.p.location}</p><button onclick="share('مشتری ${x.c.name}\\nملک ${x.p.type}\\nقیمت ${x.p.price}\\nموقعیت ${x.p.location}')">اشتراک پیشنهاد</button></div>`).join(''):'مورد مطابق پیدا نشد.';
+document.getElementById('propList').innerHTML=db.properties.map(o=>`<div class="item"><b>${esc(o.type)} — ${esc(o.owner)}</b><p>${esc(o.phone)} | ناحیه ${esc(o.district)}</p><b class="money">${fmt(o.price)} افغانی</b><p>${fmt(o.area)} مترمربع — ${esc(o.location)}</p><button class="danger" onclick="del('properties','${o.id}')">حذف</button></div>`).join('')||'هنوز ملکی ثبت نشده است';
+document.getElementById('custList').innerHTML=db.customers.map(o=>`<div class="item"><b>${esc(o.name)}</b><p>${esc(o.phone)} | ${esc(o.type)} | ${esc(o.deal)}</p><p>بودجه ${fmt(o.min)} تا ${fmt(o.max)}</p><button class="danger" onclick="del('customers','${o.id}')">حذف</button></div>`).join('')||'هنوز مشتری ثبت نشده است';
+document.getElementById('comList').innerHTML=db.commissions.map(o=>`<div class="item"><b>${esc(o.client)}</b><p>${esc(o.desc)}</p>کل: ${fmt(o.total)} — پرداخت: ${fmt(o.paid)} — باقی: ${fmt(o.total-o.paid)}<br><button class="danger" onclick="del('commissions','${o.id}')">حذف</button></div>`).join('')||'هنوز کمیسیونی ثبت نشده است';
+document.getElementById('sProps').textContent=fmt(db.properties.length);
+document.getElementById('sCust').textContent=fmt(db.customers.length);
+document.getElementById('sTotal').textContent=fmt(db.commissions.reduce((s,o)=>s+o.total,0));
 }
 function backup(){
- let data={properties,customers,accounts};
- let blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
- let a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='abraj-aseel-backup.json';a.click();
+let a=document.createElement('a');
+a.href=URL.createObjectURL(new Blob([JSON.stringify(db,null,2)],{type:'application/json'}));
+a.download='abraj-aseel-backup.json';a.click();
+URL.revokeObjectURL(a.href);
 }
 function restore(){
- let f=document.getElementById('restorefile').files[0];if(!f)return alert('فایل را انتخاب کنید');
- let r=new FileReader();
- r.onload=()=>{
- try{let d=JSON.parse(r.result);if(!d.properties||!d.customers||!d.accounts)throw 0;
- if(!confirm('اطلاعات فعلی با نسخه پشتیبان جایگزین شود؟'))return;
- properties=d.properties;customers=d.customers;accounts=d.accounts;save();alert('بازیابی انجام شد');
- }catch(e){alert('فایل پشتیبان معتبر نیست')}
- };r.readAsText(f);
-}
-function clearAll(){
- if(!confirm('تمام اطلاعات این نسخه حذف شود؟'))return;
- if(!confirm('این کار قابل بازگشت نیست. مطمئن هستید؟'))return;
- properties=[];customers=[];accounts=[];save();
+let f=document.getElementById('restoreFile').files[0];if(!f)return alert('فایل را انتخاب کنید');
+let r=new FileReader();
+r.onload=()=>{
+try{
+let x=JSON.parse(r.result);
+if(!Array.isArray(x.properties)||!Array.isArray(x.customers)||!Array.isArray(x.commissions))throw 0;
+db=x;save();alert('بازیابی شد');
+}catch(e){alert('فایل معتبر نیست')}
+};
+r.readAsText(f);
 }
 render();
+if('serviceWorker' in navigator){
+window.addEventListener('load',()=>{
+navigator.serviceWorker.register('./sw.js').catch(e=>console.log(e));
+});
+}
 </script>
 </body>
 </html>
